@@ -131,9 +131,14 @@ void testSameTimeAddMessage()
 
     std::vector<std::thread> threads;
 
-    threads.emplace_back(user, "Meghan", 1, 1000000);
-    threads.emplace_back(user, "John", 1, 1000000);
-    threads.emplace_back(user, "Alex", 1, 1000000);
+    threads.reserve(4);
+    threads.emplace_back(user, "Meghan", MAX_BUFFER_SIZE, 0);
+    sleep(1);
+    threads.emplace_back(user, "Meghan", 1, 0);
+    threads.emplace_back(user, "John", 1, 0);
+    usleep(10000);
+
+    threads.emplace_back(reader, 1);
 
     for(auto& thread : threads){
         thread.join();
@@ -167,6 +172,10 @@ int main() {
 
     srand(time(NULL));
     numberMessages = 0, processedMessages = 0;
-    testSameTimeAddMessage();
+    //testBadMessageLength();
+    //testOrderMessage();
+    testOverflowQueue();
+    //testEmptyQueue();
+    //testSameTimeAddMessage();
     return 0;
 }

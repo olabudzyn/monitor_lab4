@@ -110,20 +110,14 @@ private:
     void pushNormal(const UserMessage& userMessage)
     {
         queue_.push_back(userMessage);
+
+        if(normalHead_ == queue_.end())
+            normalHead_ = std::next(queue_.end(), -1);
     }
 
     void pushPriority(const UserMessage& userMessage)
     {
-        if(normalHead_ != queue_.end())
-        {
-            queue_.insert(normalHead_, userMessage);
-            normalHead_ = std::next(normalHead_, 1);
-        }
-        else
-        {
-            queue_.push_front(userMessage);
-            normalHead_ = std::next(queue_.begin(), 1);
-        }
+        queue_.insert(normalHead_, userMessage);
     }
 
     UserMessage popBufferHead()
@@ -132,7 +126,7 @@ private:
 
         if(message == *normalHead_)
         {
-            normalHead_ = queue_.end();
+            normalHead_ = std::next(normalHead_,1);
         }
         queue_.pop_front();
         return message;
